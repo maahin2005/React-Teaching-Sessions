@@ -6,32 +6,36 @@ function ToDo() {
   const [change, setChange] = useState("");
 
   const [data, setData] = useState([]);
-  const [newData, setNewData] = useState([]);
-  const [checked, setChecked] = useState(false);
-  const [filtered, setFiltered] = useState("");
+
+  const [filter, setFilter] = useState("all");
 
   const handleClick = () => {
-    const newTodo = { task: input, priority: change, status: filtered };
-    setData([...data, newTodo]);
+    setData([...data, { task: input, priority: change, completed: false }]);
     setInput("");
     setChange("");
   };
 
-  const handelChangeSelect = (e) => {
-    setChange(e.target.value);
+  const toggleCompleted = (index) => {
+    setData(
+      data.map((todo, i) =>
+        i === index ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
-  const handleFilterTasks = (e) => {
-    const filterValue = e.target.value;
-    setFiltered(filterValue);
-
-    if (filterValue === "complete") {
-      setNewData(data.filter((el) => el.status === true));
-    } else if (filterValue === "active") {
-      setNewData(data.filter((el) => el.status === false));
-    } else {
-      setNewData(data);
+  const filterTodos = () => {
+    switch (filter) {
+      case "completed":
+        return data.filter((todo) => todo.completed);
+      case "active":
+        return data.filter((todo) => !todo.completed);
+      default:
+        return data;
     }
+  };
+
+  const removeTodo = (index) => {
+    setData(data.filter((_, i) => i !== index));
   };
 
   return (
@@ -49,7 +53,7 @@ function ToDo() {
             />
             <select
               className="text-center bg-slate-400 cursor-pointer"
-              onChange={handelChangeSelect}
+              onChange={(e) => setChange(e.target.value)}
             >
               <option value="">Priority</option>
               <option value="high">Higher Priority</option>
@@ -68,27 +72,33 @@ function ToDo() {
               {data.length > 0 ? (
                 <>
                   <div className="w-1/2 m-auto">
-                    <select className="p-3 mb-3" onChange={handleFilterTasks}>
-                      <option value="all">All Tasks</option>
-                      <option value="complete">Completed Tasks</option>
-                      <option value="active">Active Tasks</option>
+                    <select
+                      className="p-3 mb-3 rounded-sm"
+                      onChange={(e) => setFilter(e.target.value)}
+                      value={filter}
+                    >
+                      <option value="all">All</option>
+                      <option value="completed">Completed</option>
+                      <option value="active">Active</option>
                     </select>
                   </div>
                   <table className="bg-slate-500 m-auto">
                     <thead>
                       <tr>
                         <th className="p-3 border-2">Task</th>
-                        <th className="p-3 border-2">Status</th>
                         <th className="p-3 border-2">Priority</th>
+                        <th className="p-3 border-2">Status</th>
+                        <th className="p-3 border-2">Remove</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {data.map((el, i) => (
+                      {filterTodos().map((todo, index) => (
                         <TodoTable
-                          key={i}
-                          {...el}
-                          setChecked={setChecked}
-                          checked={checked}
+                          {...todo}
+                          index={index}
+                          key={index}
+                          toggleCompleted={toggleCompleted}
+                          removeTodo={removeTodo}
                         />
                       ))}
                     </tbody>

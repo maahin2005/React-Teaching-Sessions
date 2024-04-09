@@ -1,0 +1,89 @@
+/* 1. select element from HTML -> done by ID */
+
+body {
+    background: #000;
+    color: white;
+}
+
+#parent {
+    display: grid;
+
+
+
+
+    grid-template-columns: repeat(5, 100px);
+}
+
+/* child combinator */
+
+#parent>div {
+    width: 100px;
+    height: 100px;
+    background-color: pink;
+    border: 2px dashed blue;
+}
+
+#parent>div:first-child {
+    background-color: blueviolet;
+}
+
+#parent>div:nth-child(2) {
+    background-color: brown;
+}
+
+#parent>div:nth-child(3) {
+    background-color: cadetblue;
+}
+
+#parent>div:nth-child(4) {
+    background-color: chocolate;
+}
+
+#parent>div:last-child {
+    background-color: purple;
+}
+
+#display>div {
+    display: inline;
+    /* width: 50%; */
+}
+
+#display>p {
+    display: inline-block;
+    width: 20%;
+}
+
+@media screen and (max-width:500px) {
+
+
+    #parent {
+
+        grid-template-columns: repeat(2, 100px);
+    }
+
+    body {
+        background: green;
+
+    }
+
+
+
+}
+
+@media screen and (min-width:501px) and (max-width:700px) {
+
+
+    #parent {
+
+        grid-template-columns: repeat(3, 100px);
+    }
+
+    body {
+        background: pink;
+        color: black;
+
+    }
+
+
+
+}
